@@ -1,0 +1,49 @@
+import 'package:flutter/material.dart';
+import 'package:go_router/go_router.dart';
+import '../../adaptive_layout_template.dart';
+
+//function This function takes a map of Breakpoints to Widgets and returns a map of Breakpoint to SlotLayoutConfig
+Map<Breakpoint, SlotLayoutConfig?> defaultBuildTopNavBarConfig(
+  Map<Breakpoint, List<NavigationDestination>>? topNavigationDestinations,
+  BuildContext context,
+  int? selectedNavigation,
+  NavigationRailThemeData? navRailTheme,
+) {
+  // Map to store the final configuration.
+  Map<Breakpoint, SlotLayoutConfig> config = {};
+
+  // Iterate over all breakpoints
+  for (Breakpoint breakpoint in breakpoints) {
+    // Check if this breakpoint is included in any of the maps.
+    // If not, skip this iteration.
+    if (!(topNavigationDestinations?.containsKey(breakpoint) ?? false)) {
+      continue;
+    }
+    // Build SlotLayoutConfig for this breakpoint
+    SlotLayoutConfig slotLayoutConfig = SlotLayout.from(
+      inAnimation: AdaptiveScaffold.leftOutIn,
+      outAnimation: AdaptiveScaffold.fadeOut,
+      key: Key('Primary Navigation $breakpoint'),
+      builder: (_) => AdaptiveScaffold.standardBottomNavigationBar(
+        currentIndex: selectedNavigation,
+        onDestinationSelected: (int newIndex) {
+          // TODO: Add a go_router route for each destination dynamiclly
+          context.go('/feature1/job_poster/job_poster_page');
+          // setState(() {
+          //   selectedNavigation = newIndex;
+          //   currentBodyWidgets = widget.bodyWidgets(selectedNavigation);
+          // });
+        },
+        destinations: topNavigationDestinations != null &&
+                topNavigationDestinations.containsKey(breakpoint)
+            ? topNavigationDestinations[breakpoint]!
+            : [], // use an empty list if not present in the map
+      ),
+    );
+
+    // Add this configuration to the final map
+    config[breakpoint] = slotLayoutConfig;
+  }
+
+  return config;
+}
