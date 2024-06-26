@@ -8,6 +8,7 @@ class DynamicForm {
   final String name;
   final List<DynamicFormField> fields;
 
+
   DynamicForm({
     required this.id,
     required this.name,

@@ -2,7 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:openknect_form_generator/frontend/model/dynamic_form_model.dart';
 import 'package:openknect_form_generator/frontend/view/widgets/components/steps_button.dart';
-import 'package:openknect_form_generator/frontend/view/widgets/dynamic_form_input.dart';
+import 'package:openknect_form_generator/frontend/view/widgets/components/dynamic_form_input.dart';
 import 'package:openknect_form_generator/json/form_repo.dart';
 
 class StatusExpandableListTile extends StatefulWidget {
@@ -52,7 +52,7 @@ class _StatusExpandableListTileState extends State<StatusExpandableListTile> {
             mainAxisAlignment: MainAxisAlignment.start, // Align to the start
             mainAxisSize: MainAxisSize.min,
             children: [
-              // Circular Avatar Icon
+              // Temp placeholder for avatar
               const CircleAvatar(
                 radius: 20,
                 backgroundColor: Colors.blue,
@@ -61,12 +61,12 @@ class _StatusExpandableListTileState extends State<StatusExpandableListTile> {
                   color: Colors.white,
                 ),
               ),
-              const SizedBox(width: 10), // Add spacing between icon and steps
+              const SizedBox(width: 10),
               // Divider
               // const VerticalDivider(
-              //   width: 10, // Line width
-              //   thickness: 20, // Line thickness
-              //   color: Color.fromARGB(255, 0, 0, 0), // Line color
+              //   width: 10, 
+              //   thickness: 20, 
+              //   color: Color.fromARGB(255, 0, 0, 0), 
               // ),
               const SizedBox(width: 10), // Add spacing after divider
               // Steps
@@ -82,8 +82,8 @@ class _StatusExpandableListTileState extends State<StatusExpandableListTile> {
                     width: 50, // Line width
                     height: 5,
                     color: widget.currentStep > i
-                        ? Colors.blue // Filled line if step is completed
-                        : Colors.grey[300], // Empty line otherwise
+                        ? Colors.blue 
+                        : Colors.grey[300], 
                   ),
               }
             ],

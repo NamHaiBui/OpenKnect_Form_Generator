@@ -1,7 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:openknect_form_generator/frontend/model/dynamic_form_model.dart';
-import 'package:openknect_form_generator/frontend/view/widgets/dynamic_form_input.dart';
+import 'package:openknect_form_generator/frontend/view/widgets/components/dynamic_form_input.dart';
 import 'package:openknect_form_generator/json/form_repo.dart';
 
 class HomeScreen extends StatefulWidget {

@@ -10,6 +10,7 @@ environment:
 dependencies:
   flutter:
     sdk: flutter
+  intl: ^0.19.0
   flutter_adaptive_scaffold: ^0.1.11
   flutter_animate: ^4.5.0
   flutter_form_builder: ^9.3.0
@@ -31,6 +32,7 @@ dependencies:
   shared_preferences: any
   responsive_framework: any
   json: ^0.20.2
+  country_state_city: ^0.1.6
 dependency_overrides: 
   intl: ^0.19.0
 dev_dependencies:
