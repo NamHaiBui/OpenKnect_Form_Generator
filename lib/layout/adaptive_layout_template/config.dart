@@ -17,28 +17,6 @@ abstract class ConfigurationStrategy {
   Map<Breakpoint, SlotLayoutConfig?> buildSecondaryBodySlotLayoutConfig(
       Map<Breakpoint, Widget> widgets);
 
-  //*PrimaryNavBar
-  // Map<Breakpoint, SlotLayoutConfig?> buildPrimaryNavBarConfig(
-  //     BuildContext context,
-  //     Map<Breakpoint, Widget>? leadingWidgets,
-  //     Map<Breakpoint, List<NavigationDestination>>? destinations,
-  //     Map<Breakpoint, Widget>? trailingWidgets,
-  //     NavigationRailThemeData? navRailTheme,
-  //     int? selectedNavigation);
-  //*BottomNavBar
-  // Map<Breakpoint, SlotLayoutConfig?> buildBottomNavBarConfig(
-  //   Map<Breakpoint, List<NavigationDestination>>? bottomNavigationDestinations,
-  //   BuildContext context,
-  //   int? selectedNavigation,
-  //   NavigationRailThemeData? navRailTheme,
-  // );
-  //*TopNavBar
-  // Map<Breakpoint, SlotLayoutConfig?> buildTopNavBarConfig(
-  //   Map<Breakpoint, List<NavigationDestination>>? topNavigationDestinations,
-  //   BuildContext context,
-  //   int? selectedNavigation,
-  //   NavigationRailThemeData? navRailTheme,
-  // );
 }
 
 //*Default Configuration Strategy

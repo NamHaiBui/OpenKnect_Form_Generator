@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:go_router/go_router.dart';
 import 'package:openknect_form_generator/layout/adaptive_layout_template/adaptive_layout_template.dart';
-// import 'package:openknect_app/features/adaptive_layout_template/adaptive_layout_template.dart';
+// // import 'package:openknect_app/features/adaptive_layout_template/adaptive_layout_template.dart';
 
 //function This function takes a map of Breakpoints to Widgets and returns a map of Breakpoint to SlotLayoutConfig
 Map<Breakpoint, SlotLayoutConfig?> defaultBuildBottomNavBarConfig(

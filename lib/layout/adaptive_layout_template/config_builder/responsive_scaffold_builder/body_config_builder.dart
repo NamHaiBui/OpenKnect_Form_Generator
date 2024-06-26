@@ -2,7 +2,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_adaptive_scaffold/flutter_adaptive_scaffold.dart';
 import 'package:openknect_form_generator/layout/adaptive_layout_template/widgets/max_width_box_widget.dart';
-// import 'package:openknect_app/features/adaptive_layout_template/widgets/max_width_box_widget.dart';
+// // import 'package:openknect_app/features/adaptive_layout_template/widgets/max_width_box_widget.dart';
 
 Map<Breakpoint, SlotLayoutConfig?> responsiveBuildSlotLayoutConfigBody(
     Map<Breakpoint, Widget> widgets) {
