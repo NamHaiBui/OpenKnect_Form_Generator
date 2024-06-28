@@ -48,9 +48,6 @@ class DynamicFormField {
 
   /// Constructor for the DynamicFormField class.
   DynamicFormField({
-    required this.date,
-    required this.startHintText,
-    required this.endHintText,
     required this.type,
     required this.label,
     required this.initialValue,
@@ -58,5 +55,8 @@ class DynamicFormField {
     required this.text,
     required this.options,
     required this.validations,
+    required this.date,
+    required this.startHintText,
+    required this.endHintText,
   });
 }

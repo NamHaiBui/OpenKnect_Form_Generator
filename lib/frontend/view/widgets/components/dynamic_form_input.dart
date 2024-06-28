@@ -23,25 +23,25 @@ class DynamicFormInput extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     switch (field.type) {
-      case 'TextBox':
+      case 'textBox':
         return TextFieldWidget(field: field);
-      case 'DropdownList':
+      case 'dropdownList':
         return DropdownFieldWidget(field: field);
-      case 'CheckBox':
+      case 'checkBox':
         return CheckboxFieldWidget(field: field);
-      case 'CheckboxGroup':
+      case 'checkboxGroup':
         return CheckboxGroupFieldWidget(field: field);
-      case 'RadioGroup':
+      case 'radioGroup':
         return RadioGroupFieldWidget(field: field);
-      case 'Date':
+      case 'date':
         return DateFieldWidget(field: field);
-      case 'DateRange':
+      case 'dateRange':
         return DateRangeFieldWidget(field: field);
-      case 'NumRange':
+      case 'numRange':
         return NumRangeFieldWidget(field: field);
-      case 'Address':
+      case 'address':
         return AddressFieldWidget(field: field);
-      case 'ToCollectCheckboxGroup':
+      case 'toCollectCheckboxGroup':
         return ToCollectCheckboxGroupFieldWidget(field: field);
       default:
         return Padding(

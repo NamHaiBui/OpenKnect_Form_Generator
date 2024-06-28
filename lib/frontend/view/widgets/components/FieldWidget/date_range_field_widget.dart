@@ -35,10 +35,10 @@ class DateRangeFieldWidget extends StatelessWidget {
     final String? startHintText = field.startHintText;
     final String? endHintText = field.endHintText;
     final DateTime firstDate = field.date != null
-        ? DateTime.parse(field.date!.firstDate)
+        ? DateTime.parse(field.date!.firstDate ?? DateTime.now().toString())
         : DateTime.now();
     final DateTime lastDate = field.date != null
-        ? DateTime.parse(field.date!.lastDate)
+        ? DateTime.parse(field.date!.lastDate ?? "2000-01-01")
         : DateTime.now();
     final String? Function(dynamic) validator = FormBuilderValidators.compose([
       if (field.validations.required)

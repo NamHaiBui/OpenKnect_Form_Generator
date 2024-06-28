@@ -4,7 +4,7 @@ class FormJson {
   "name": "Contact Details Form",
   "fields": [
     {
-      "type": "TextBox",
+      "type": "textBox",
       "label": "Text Input",
       "initialValue": ["Initial Text"],
       "key": "textInput",
@@ -17,7 +17,7 @@ class FormJson {
       }
     },
     {
-      "type": "DropdownList",
+      "type": "dropdownList",
       "label": "Dropdown List",
       "initialValue": ["Option 2"],
       "key": "dropdownList",
@@ -31,7 +31,7 @@ class FormJson {
       }
     },
     {
-      "type": "CheckBox",
+      "type": "checkBox",
       "label": "Checkbox",
       "initialValue": ["true"],
       "key": "checkbox",
@@ -41,7 +41,7 @@ class FormJson {
       }
     },
     {
-      "type": "CheckboxGroup",
+      "type": "checkboxGroup",
       "label": "Checkbox Group",
       "initialValue": ["Option 1", "Option 3"],
       "key": "checkboxGroup",
@@ -55,7 +55,7 @@ class FormJson {
       }
     },
     {
-      "type": "RadioGroup",
+      "type": "radioGroup",
       "label": "Radio Group",
       "initialValue": ["Option 2"],
       "key": "radioGroup",
@@ -69,19 +69,29 @@ class FormJson {
       }
     },
     {
-      "type": "Date",
-      "label": "Date",
+      "type": "date",
+      "label": "Birth Date",
+      "name": "birthDate",
+      "key":"date",
+      "date": {
+        "dateFormat": "yyyy-MM-dd",
+        "firstDate": "2023-12-31",
+        "lastDate": "2023-12-31"
+      },
       "initialValue": ["2023-12-25"],
-      "key": "date",
-      "options": [],
       "validations": {
         "required": true
       }
     },
     {
-      "type": "DateRange",
+      "type": "dateRange",
       "label": "Date Range",
-      "initialValue": ["2023-12-20", "2023-12-30"],
+      "date": {
+        "dateFormat": "yyyy-MM-dd",
+        "firstDate": "2000-01-01",
+        "lastDate": "2023-12-31"
+      },
+      "initialValue": ["2023-12-25","2023-12-26"],
       "key": "dateRange",
       "options": [],
       "validations": {
@@ -89,7 +99,7 @@ class FormJson {
       }
     },
     {
-      "type": "NumRange",
+      "type": "numRange",
       "label": "Number Range",
       "initialValue": ["10", "50"],
       "key": "numRange",
@@ -99,7 +109,7 @@ class FormJson {
       }
     },
     {
-      "type": "Address",
+      "type": "address",
       "label": "Address",
       "initialValue": ["123 Main St", "Carli", "Anytown", "CA", "12345"],
       "key": "address",
@@ -109,7 +119,7 @@ class FormJson {
       }
     },
     {
-      "type": "ToCollectCheckboxGroup",
+      "type": "toCollectCheckboxGroup",
       "label": "To Collect Checkbox Group",
       "text": "Fun",
       "initialValue": ["Option 2", "Option 3"],

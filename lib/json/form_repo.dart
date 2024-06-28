@@ -11,7 +11,12 @@ class FormRepository {
   }
 
   Future<DynamicForm> loadForm() async {
-    final dynamicForm = DynamicForm.fromJson(jsonDecode(getJson()));
-    return dynamicForm;
+    try {
+      final dynamicForm = DynamicForm.fromJson(jsonDecode(getJson()));
+      return dynamicForm;
+    } catch (e) {
+      print(e);
+    }
+    return Future<DynamicForm>.value(null);
   }
 }

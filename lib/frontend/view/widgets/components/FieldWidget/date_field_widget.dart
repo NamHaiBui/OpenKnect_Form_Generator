@@ -32,10 +32,10 @@ class DateFieldWidget extends StatelessWidget {
     final String formFieldName = field.label;
     final String? hintText = field.startHintText;
     final DateTime firstDate = field.date != null
-        ? DateTime.parse(field.date!.firstDate)
+        ? DateTime.parse(field.date!.firstDate ?? "2000-01-01")
         : DateTime.now();
     final DateTime lastDate = field.date != null
-        ? DateTime.parse(field.date!.lastDate)
+        ? DateTime.parse(field.date!.lastDate ?? "2023-12-31")
         : DateTime.now();
     final DateTime? initialValue = DateTime.tryParse(field.initialValue![0]);
     final DateFormat dateFormat =
