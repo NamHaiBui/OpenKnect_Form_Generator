@@ -64,9 +64,9 @@ class _StatusExpandableListTileState extends State<StatusExpandableListTile> {
               const SizedBox(width: 10),
               // Divider
               // const VerticalDivider(
-              //   width: 10, 
-              //   thickness: 20, 
-              //   color: Color.fromARGB(255, 0, 0, 0), 
+              //   width: 10,
+              //   thickness: 20,
+              //   color: Color.fromARGB(255, 0, 0, 0),
               // ),
               const SizedBox(width: 10), // Add spacing after divider
               // Steps
@@ -81,9 +81,8 @@ class _StatusExpandableListTileState extends State<StatusExpandableListTile> {
                   Container(
                     width: 50, // Line width
                     height: 5,
-                    color: widget.currentStep > i
-                        ? Colors.blue 
-                        : Colors.grey[300], 
+                    color:
+                        widget.currentStep > i ? Colors.blue : Colors.grey[300],
                   ),
               }
             ],
@@ -91,47 +90,52 @@ class _StatusExpandableListTileState extends State<StatusExpandableListTile> {
         ],
       ),
       children: [
-        FutureBuilder<DynamicForm?>(
-          future: widget.formRepository.loadForm(),
-          builder:
-              (BuildContext context, AsyncSnapshot<DynamicForm?> snapshot) {
-            if (snapshot.connectionState == ConnectionState.waiting) {
-              return const Center(
-                child: Column(
-                  mainAxisAlignment: MainAxisAlignment.center,
-                  crossAxisAlignment: CrossAxisAlignment.center,
-                  children: [
-                    CircularProgressIndicator(),
-                    SizedBox(height: 16),
-                    Text("Loading form, please wait..."),
-                  ],
-                ),
-              );
-            }
-            if (snapshot.hasError) {
-              return Center(
-                child: Text("Something bad happened ${snapshot.error}"),
-              );
-            }
-            if (snapshot.hasData) {
-              return Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: FormBuilder(
-                  key: _formKey,
-                  child: Column(
-                    children: snapshot.data!.fields
-                        .map(
-                          (field) => DynamicFormInput(
-                            field: field,
-                          ),
-                        )
-                        .toList(),
-                  ),
-                ),
-              );
-            }
-            return const Center(child: Text("Form does not exist."));
-          },
+        SizedBox(
+          height: MediaQuery.of(context).size.height * 0.6,
+          child: SingleChildScrollView(
+            child: FutureBuilder<DynamicForm?>(
+              future: widget.formRepository.loadForm(),
+              builder:
+                  (BuildContext context, AsyncSnapshot<DynamicForm?> snapshot) {
+                if (snapshot.connectionState == ConnectionState.waiting) {
+                  return const Center(
+                    child: Column(
+                      mainAxisAlignment: MainAxisAlignment.center,
+                      crossAxisAlignment: CrossAxisAlignment.center,
+                      children: [
+                        CircularProgressIndicator(),
+                        SizedBox(height: 16),
+                        Text("Loading form, please wait..."),
+                      ],
+                    ),
+                  );
+                }
+                if (snapshot.hasError) {
+                  return Center(
+                    child: Text("Something bad happened ${snapshot.error}"),
+                  );
+                }
+                if (snapshot.hasData) {
+                  return Padding(
+                    padding: const EdgeInsets.all(16.0),
+                    child: FormBuilder(
+                      key: _formKey,
+                      child: Column(
+                        children: snapshot.data!.fields
+                            .map(
+                              (field) => DynamicFormInput(
+                                field: field,
+                              ),
+                            )
+                            .toList(),
+                      ),
+                    ),
+                  );
+                }
+                return const Center(child: Text("Form does not exist."));
+              },
+            ),
+          ),
         ),
       ],
     );

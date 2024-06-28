@@ -34,8 +34,12 @@ class DateRangeFieldWidget extends StatelessWidget {
     final String formFieldName = field.label;
     final String? startHintText = field.startHintText;
     final String? endHintText = field.endHintText;
-    final DateTime firstDate = DateTime.parse(field.firstDate);
-    final DateTime lastDate = DateTime.parse(field.lastDate);
+    final DateTime firstDate = field.date != null
+        ? DateTime.parse(field.date!.firstDate)
+        : DateTime.now();
+    final DateTime lastDate = field.date != null
+        ? DateTime.parse(field.date!.lastDate)
+        : DateTime.now();
     final String? Function(dynamic) validator = FormBuilderValidators.compose([
       if (field.validations.required)
         FormBuilderValidators.required(errorText: 'Required'),
@@ -45,7 +49,8 @@ class DateRangeFieldWidget extends StatelessWidget {
         : TimePeriod(
             startDateTime: DateTime.parse(field.initialValue![0]),
             endDateTime: DateTime.parse(field.initialValue![1]));
-    final DateFormat dateFormat  = DateFormat();
+    final DateFormat dateFormat =
+        field.date != null ? DateFormat(field.date!.dateFormat) : DateFormat();
 
     return Padding(
       padding: paddingBetweenFormFields,
@@ -104,7 +109,8 @@ class DateRangeFieldWidget extends StatelessWidget {
                         Expanded(
                           child: InkWell(
                             borderRadius: BorderRadius.circular(10),
-                            onTap: () => selectDate(context, fieldState,firstDate, lastDate),
+                            onTap: () => selectDate(
+                                context, fieldState, firstDate, lastDate),
                             child: IgnorePointer(
                               ignoring: true,
                               child: TextFormField(

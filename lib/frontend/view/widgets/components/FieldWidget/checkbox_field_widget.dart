@@ -1,5 +1,6 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:form_builder_validators/form_builder_validators.dart';
 import 'package:openknect_app/app_common/config/screen_sizes/desktop/desktop_typography_config.dart';
 import 'package:openknect_form_generator/frontend/model/dynamic_form_field_model.dart';
 import 'package:openknect_form_generator/frontend/view/widgets/components/config/form_field_appearance.dart';
@@ -12,9 +13,10 @@ class CheckboxFieldWidget extends StatelessWidget {
     final String formFieldName = field.label;
     final String checkboxText = field.text ?? "empty";
     final bool initialValue = field.initialValue == null;
-    validator(p0) {
-      return null;
-    }
+    final String? Function(dynamic) validator = FormBuilderValidators.compose([
+      if (field.validations.required)
+        FormBuilderValidators.required(errorText: 'Required'),
+    ]);
 
     return Column(
       children: [

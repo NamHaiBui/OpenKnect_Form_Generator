@@ -1,3 +1,4 @@
+import 'package:openknect_form_generator/frontend/model/dynamic_form_date_field.dart';
 import 'package:openknect_form_generator/frontend/model/dynamic_form_field_validation_model.dart';
 import 'package:json/json.dart';
 
@@ -26,6 +27,7 @@ class DynamicFormField {
 
   /// The initial value of the form field.
   /// This is only used for certain types of form fields, such as 'DropdownList'.
+  /// If only one initialValue is needed, the program will take the first (initialValue[0]).
   final List<String>? initialValue;
 
   /// The key of the form field.
@@ -40,19 +42,13 @@ class DynamicFormField {
   /// This is used to validate the user input.
   final DynamicFormFieldValidation validations;
 
-  final String dateFormat;
-  final String firstDate;
-  final String lastDate;
+  final DynamicFormDateField? date;
 
   /// Creates a new instance of the DynamicFormField class.
 
   /// Constructor for the DynamicFormField class.
   DynamicFormField({
-    //
-    required this.dateFormat,
-    required this.firstDate,
-    required this.lastDate,
-    //
+    required this.date,
     required this.startHintText,
     required this.endHintText,
     required this.type,

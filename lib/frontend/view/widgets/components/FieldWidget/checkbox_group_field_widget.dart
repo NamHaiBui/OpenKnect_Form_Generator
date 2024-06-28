@@ -20,7 +20,8 @@ class CheckboxGroupFieldWidget extends StatelessWidget {
     final String formFieldName = field.label;
 
     final List<dynamic> options = field.options!;
-    final List<bool>? initialValue = field.initialValue?.cast<bool>();
+    final List<bool>? initialValue =
+        field.initialValue?.map((e) => e == true).toList(growable: false);
     final String? Function(dynamic) validator = FormBuilderValidators.compose([
       if (field.validations.required)
         FormBuilderValidators.required(errorText: 'Required'),

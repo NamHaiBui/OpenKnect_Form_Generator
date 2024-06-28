@@ -7,7 +7,6 @@ import 'package:openknect_form_generator/frontend/layout/theme_system/data/text_
 import 'package:openknect_form_generator/frontend/model/dynamic_form_field_model.dart';
 import 'package:openknect_form_generator/frontend/view/widgets/components/FieldWidget/field_name_widget.dart';
 import 'package:openknect_form_generator/frontend/view/widgets/components/config/form_field_appearance.dart';
-import 'package:openknect_form_generator/frontend/view/widgets/components/config/form_validators.dart';
 
 class DateFieldWidget extends StatelessWidget {
   const DateFieldWidget({super.key, required this.field});
@@ -32,10 +31,15 @@ class DateFieldWidget extends StatelessWidget {
   Widget build(BuildContext context) {
     final String formFieldName = field.label;
     final String? hintText = field.startHintText;
-    final DateTime firstDate = DateTime.parse(field.firstDate);
-    final DateTime lastDate = DateTime.parse(field.lastDate);
+    final DateTime firstDate = field.date != null
+        ? DateTime.parse(field.date!.firstDate)
+        : DateTime.now();
+    final DateTime lastDate = field.date != null
+        ? DateTime.parse(field.date!.lastDate)
+        : DateTime.now();
     final DateTime? initialValue = DateTime.tryParse(field.initialValue![0]);
-    final DateFormat dateFormat = DateFormat();
+    final DateFormat dateFormat =
+        field.date != null ? DateFormat(field.date!.dateFormat) : DateFormat();
     final String? Function(dynamic) validator = FormBuilderValidators.compose([
       if (field.validations.required)
         FormBuilderValidators.required(errorText: 'Required'),

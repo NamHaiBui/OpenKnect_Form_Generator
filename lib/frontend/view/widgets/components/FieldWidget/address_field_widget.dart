@@ -1,5 +1,5 @@
-import 'dart:convert';
-
+import 'package:country_state_city/models/country.dart' as stc;
+import 'package:country_state_city/models/state.dart' as stt;
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -15,9 +15,15 @@ import 'package:openknect_form_generator/frontend/view/widgets/components/config
 import 'package:openknect_form_generator/frontend/view/widgets/components/config/form_validators.dart';
 import 'package:openknect_form_generator/package_initialization.dart';
 
-class AddressFieldWidget extends StatelessWidget {
+class AddressFieldWidget extends StatefulWidget {
   const AddressFieldWidget({super.key, required this.field});
   final DynamicFormField field;
+
+  @override
+  State<AddressFieldWidget> createState() => _AddressFieldWidgetState();
+}
+
+class _AddressFieldWidgetState extends State<AddressFieldWidget> {
   void updateAddressField(
       String? value, FormFieldState<Address> fieldState, String fieldChanged) {
     Address oldFieldValue = fieldState.value!;
@@ -44,16 +50,31 @@ class AddressFieldWidget extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    final String formFieldName = field.label;
+    final String formFieldName = widget.field.label;
     final String? Function(dynamic) validator = FormBuilderValidators.compose([
-      if (field.validations.required)
+      if (widget.field.validations.required)
         FormBuilderValidators.required(errorText: 'Required'),
     ]);
-    final Address? initialValue = field.initialValue == null
-        ? null
-        : Address.fromJson(jsonDecode(field.initialValue![0]));
-    final List<String> statesList = PackageInitialization.stateList;
-    final List<String> countriesList = PackageInitialization.countryList;
+    bool inUS = true;
+    final Address? initialValue = null;
+    // field.initialValue == null
+    //     ? null
+    //     : Address(
+    //         street: field.initialValue![0],
+    //         district: field.initialValue![1],
+    //         city: field.initialValue![2],
+    //         state: field.initialValue![3],
+    //         postalCode: field.initialValue![4],
+    //         country: "United States");
+    final List<stt.State> mainStatesList = FormPackageInitialization.stateList;
+    List<String> dynamicStatesList = mainStatesList
+        .where((e) => e.countryCode == "US")
+        .map((e) => e.isoCode)
+        .toList();
+    final List<stc.Country> mainCountriesList =
+        FormPackageInitialization.countryList;
+    List<String> dynamicCountriesList =
+        mainCountriesList.map((e) => e.name).toList();
     return Padding(
       padding: paddingBetweenFormFields,
       child: Column(
@@ -66,8 +87,8 @@ class AddressFieldWidget extends StatelessWidget {
           spacingBetweenTitleAndField,
           FormBuilderField<Address>(
               name: formFieldName,
-              initialValue: initialValue ??
-                  Address(state: "Unknown", country: "United States"),
+              initialValue:
+                  initialValue ?? Address(state: "Unknown", country: "US"),
               builder: (FormFieldState<Address> fieldState) {
                 return Column(
                   crossAxisAlignment: CrossAxisAlignment.start,
@@ -180,19 +201,24 @@ class AddressFieldWidget extends StatelessWidget {
                               height: formAddressStateFieldSize.height,
                               width: formAddressStateFieldSize.width,
                               child: DropdownButtonFormField(
+                                iconDisabledColor: Colors.transparent,
                                 value: initialValue?.state,
                                 autovalidateMode:
                                     AutovalidateMode.onUserInteraction,
                                 validator: validator,
-                                items: statesList
+                                items: dynamicStatesList
                                     .map((value) => DropdownMenuItem(
                                           value: value,
                                           child: Text(value),
                                         ))
                                     .toList(),
                                 focusColor: Colors.transparent,
-                                onChanged: (value) => updateAddressField(
-                                    value, fieldState, addressFormFields.state),
+                                onChanged: inUS
+                                    ? (value) => updateAddressField(
+                                        value as String?,
+                                        fieldState,
+                                        addressFormFields.state)
+                                    : null,
                                 onSaved: (value) => updateAddressField(
                                     value, fieldState, addressFormFields.state),
                                 style: inputTitleTextStyle,
@@ -205,6 +231,11 @@ class AddressFieldWidget extends StatelessWidget {
                                   focusedBorder: focusedBorderNoRadius,
                                   errorBorder: errorBorderNoRadius,
                                   errorStyle: hiddenTextStyle,
+                                  disabledBorder: OutlineInputBorder(
+                                    borderSide: BorderSide(
+                                      color: Colors.grey.shade300,
+                                    ),
+                                  ),
                                 ),
                               ),
                             ),
@@ -220,15 +251,18 @@ class AddressFieldWidget extends StatelessWidget {
                               child: DropdownButtonFormField(
                                 value: initialValue?.country ?? "United States",
                                 validator: validator,
-                                items: countriesList
+                                items: dynamicCountriesList
                                     .map((value) => DropdownMenuItem(
                                           value: value,
                                           child: Text(value),
                                         ))
                                     .toList(),
                                 onChanged: (value) {
-                                  updateAddressField(value, fieldState,
-                                      addressFormFields.country);
+                                  setState(() {
+                                    inUS = value == "United States";
+                                    updateAddressField(value, fieldState,
+                                        addressFormFields.country);
+                                  });
                                 },
                                 onSaved: (value) => updateAddressField(value,
                                     fieldState, addressFormFields.country),

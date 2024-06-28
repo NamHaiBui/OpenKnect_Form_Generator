@@ -98,7 +98,7 @@ class _MyHomePageState extends ConsumerState<AdaptiveLayoutTemplate> {
 
     // Firebase Messaging setup
     ref
-        .read(PackageInitialization.firebaseMessagingServiceProvider)
+        .read(FormPackageInitialization.firebaseMessagingServiceProvider)
         .setup(context);
   }
 

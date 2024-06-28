@@ -1,5 +1,3 @@
-import 'dart:convert';
-
 import 'package:flutter/material.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
 import 'package:form_builder_validators/form_builder_validators.dart';
@@ -34,7 +32,9 @@ class NumRangeFieldWidget extends StatelessWidget {
     final String? endHintText = field.endHintText;
     final Range? initialValue = field.initialValue == null
         ? null
-        : Range.fromJson(jsonDecode(jsonEncode(field.initialValue)));
+        : Range(
+            startRange: double.tryParse(field.initialValue![0]),
+            endRange: double.tryParse(field.initialValue![1]));
     final bool isDecimal = field.text == null ? false : field.text == "true";
     // final List<TextInputFormatter> inputFormatters;
     return Padding(

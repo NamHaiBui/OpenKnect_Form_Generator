@@ -8,10 +8,16 @@ class ApplicationStatusTrackerWidget extends StatelessWidget {
   final int currentStep;
   final List<String> steps;
 
-  const ApplicationStatusTrackerWidget(
-      {super.key,
-      required this.currentStep,
-      this.steps = const ["Applied", "Screen", "Interview", "Offer"]});
+  const ApplicationStatusTrackerWidget({
+    super.key,
+    required this.currentStep,
+    this.steps = const [
+      "Applied",
+      "Screen",
+      "Interview",
+      "Offer",
+    ],
+  });
 
   @override
   Widget build(BuildContext context) {
@@ -33,8 +39,11 @@ class ApplicationStatusTrackerWidget extends StatelessWidget {
       mainAxisAlignment: MainAxisAlignment.center,
       mainAxisSize: MainAxisSize.min,
       children: [
-        StatusExpandableListTile(
-            steps: steps, currentStep: currentStep, maxDotSize: maxDotSize),
+        SizedBox(
+          width: MediaQuery.of(context).size.width * 0.8,
+          child: StatusExpandableListTile(
+              steps: steps, currentStep: currentStep, maxDotSize: maxDotSize),
+        ),
       ],
     );
   }
