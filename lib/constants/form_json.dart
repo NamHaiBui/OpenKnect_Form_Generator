@@ -1,5 +1,6 @@
 class FormJson {
-  static const String formJson = '''{
+  static const String formJson = '''
+{
   "id": 1,
   "name": "Contact Details Form",
   "fields": [
@@ -135,5 +136,45 @@ class FormJson {
     }
   ]
 }''';
+  static const adminFormJson = '''
+{
+    "id": 0,
+    "name": "Admin Form Creator",
+    "fields": [
+        {
+            "type": "textBox",
+            "label": "How many form step would you like to create?",
+            "initialValue": [
+                "4"
+            ],
+            "key": "StepCount",
+            "text": "Input form step count here",
+            "options": [],
+            "validations": {
+                "required": true,
+                "numeric": true,
+                "minLength": 1,
+                "maxLength": 1,
+                "minNumber": 1,
+                "maxNumber": 4
+            }
+        },
+        {
+            "type": "textBox",
+            "label": "Form Field",
+            "initialValue": [
+                ""
+            ],
+            "key": "textbox1",
+            "text": "Enter text for textbox 1",
+            "options": [],
+            "validations": {
+                "required": true,
+                "maxLength": 10
+            }
+        }
+    ]
+}
+''';
   const FormJson._();
 }

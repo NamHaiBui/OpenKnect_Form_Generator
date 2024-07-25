@@ -3,13 +3,13 @@ import 'package:openknect_app/app_common/service/firebase_messaging_service_prov
     as opk_app_msg;
 import 'package:openknect_app/app_common/presentation/data_provider/button_state/hamburger_menu.dart'
     as bt;
+import 'package:openknect_form_generator/gemini_initialization.dart';
 
 class FormPackageInitialization {
   static final firebaseMessagingServiceProvider =
       opk_app_msg.firebaseMessagingServiceProvider;
 
   static final hamburgerMenuProvider = bt.hamburgerMenuProvider;
-
   static Future<List<State>> _getAllStates() async {
     return await getAllStates();
   }
@@ -18,7 +18,8 @@ class FormPackageInitialization {
     return await getAllCountries();
   }
 
-  static Future<void> initialize() async {
+  static Future<void> initialize({required String apiKey}) async {
+    await GeminiInitializer.initialize(apiKey);
     stateList = await _getAllStates();
     countryList = await _getAllCountries();
   }

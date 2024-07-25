@@ -18,7 +18,7 @@ dependencies:
   flutter_riverpod: ^2.5.1
   flutter_svg: ^2.0.10+1
   form_builder_validators: ^9.1.0
-  go_router: ^14.2.0
+  go_router: ^14.2.1
   hooks_riverpod: ^2.5.1
   number_text_input_formatter: ^1.0.0+8
   openknect_db_model:
@@ -33,6 +33,11 @@ dependencies:
   responsive_framework: any
   json: ^0.20.2
   country_state_city: ^0.1.6
+  google_generative_ai: ^0.4.3
+  flutter_markdown: ^0.7.2+1
+  flutter_dotenv: ^5.1.0
+  http: ^1.2.1
+  path_provider: ^2.1.3
 dependency_overrides: 
   intl: ^0.19.0
 dev_dependencies:
