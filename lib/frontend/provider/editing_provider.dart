@@ -35,6 +35,7 @@ class StepNotifier extends StateNotifier<int> {
   }
 
   int get currentStepIndex => state;
+  int get stepCount => _steps.length;
   String get currentStep => _steps[state];
 }
 

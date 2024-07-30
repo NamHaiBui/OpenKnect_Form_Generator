@@ -112,80 +112,88 @@ class _PlaygroundWidgetState extends State<PlaygroundWidget> {
       );
     } catch (error) {
       setState(() {
-        errorMessages.add('Invalid JSON: $error');
+        ScaffoldMessenger.of(context).showSnackBar(
+          SnackBar(content: Text(error.toString())),
+        );
       });
-      return ListView.builder(
-        shrinkWrap: true,
-        physics: const NeverScrollableScrollPhysics(),
-        itemCount: errorMessages.length,
-        itemBuilder: (context, index) {
-          return ListTile(
-            title: Text(
-              errorMessages[index],
-            ),
-          );
-        },
-      );
+      if (context.mounted) {
+        ScaffoldMessenger.of(context).removeCurrentSnackBar();
+      }
+      return const Text('Please review the error');
     }
   }
 
   @override
   Widget build(BuildContext context) {
-    return Expanded(
-        child: VerticalSplitView(
-            left: EditingBox(
-              textPromptController: textPromptController,
-              onSaved: (newValue) {
-                setState(() {
-                  jsonCode = newValue;
-                  update = true;
-                });
-              },
-              showModal: _showModal,
-            ),
-            right: Container(
-              decoration: BoxDecoration(
-                border: Border.all(),
-              ),
-              child: Padding(
-                padding: const EdgeInsets.all(16.0),
-                child: Column(
-                  children: <Widget>[
-                    SingleChildScrollView(
-                      child: update
-                          ? attemptParsing(
-                              jsonCode ?? "") // parse the following form
-                          : parsedForm !=
-                                  null // If bad parse then display the latest form parsed
-                              ? FormBuilder(
-                                  child: Column(
-                                    children: parsedForm!.fields
-                                        .map<Widget>(
-                                          (field) => DynamicFormInput(
-                                            field: field,
-                                            onSaved: (p0) {},
-                                            onSubmit: (p0) {},
-                                          ),
-                                        )
-                                        .toList(),
-                                  ),
-                                )
-                              : const Center(
-                                  child: Text("No JSON provided"),
+    return VerticalSplitView(
+        left: EditingBox(
+          onError: (errorMessage) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text(errorMessage)),
+            );
+            Future.delayed(const Duration(seconds: 3), () {
+              if (context.mounted) {
+                ScaffoldMessenger.of(context).removeCurrentSnackBar();
+              }
+            });
+          },
+          textPromptController: textPromptController,
+          onSaved: (newValue) {
+            setState(() {
+              jsonCode = newValue;
+              update = true;
+            });
+          },
+          showModal: _showModal,
+        ),
+        right: Container(
+          decoration: BoxDecoration(
+            border: Border.all(),
+          ),
+          child: Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: Column(
+              children: <Widget>[
+                Container(
+                  decoration: const BoxDecoration(
+                    border: Border(bottom: BorderSide(color: Colors.grey)),
+                  ),
+                  child: SingleChildScrollView(
+                    child: update
+                        ? attemptParsing(
+                            jsonCode ?? "") // parse the following form
+                        : parsedForm !=
+                                null // If bad parse then display the latest form parsed
+                            ? FormBuilder(
+                                child: Column(
+                                  children: parsedForm!.fields
+                                      .map<Widget>(
+                                        (field) => DynamicFormInput(
+                                          field: field,
+                                          onSaved: (p0) {},
+                                          onSubmit: (p0) {},
+                                        ),
+                                      )
+                                      .toList(),
                                 ),
-                    ),
-                    MaterialButton(
-                      color: Theme.of(context).colorScheme.secondary,
-                      onPressed: () async {
-                        if (jsonCode != null && jsonCode!.isNotEmpty) {
-                          await _saveInputToFile(jsonCode!);
-                        }
-                      },
-                      child: const Text('Save to File'),
-                    ),
-                  ],
+                              )
+                            : const Center(
+                                child: Text("No JSON provided"),
+                              ),
+                  ),
                 ),
-              ),
-            )));
+                MaterialButton(
+                  color: Theme.of(context).colorScheme.secondary,
+                  onPressed: () async {
+                    if (jsonCode != null && jsonCode!.isNotEmpty) {
+                      await _saveInputToFile(jsonCode!);
+                    }
+                  },
+                  child: const Text('Save to File'),
+                ),
+              ],
+            ),
+          ),
+        ));
   }
 }

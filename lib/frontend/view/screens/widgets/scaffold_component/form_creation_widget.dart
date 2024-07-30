@@ -16,80 +16,71 @@ class _FormCreationWidgetState extends ConsumerState<FormCreationWidget> {
 
   @override
   Widget build(BuildContext context) {
+    // Watch the stepProvider to get the current step
+    final currentStep = ref.watch(stepProvider);
     final stepNotifier = ref.watch(stepProvider.notifier);
+
     return Scaffold(
+      appBar: _showProcessBar
+          ? AppBar(
+              title: widget.processBar,
+              backgroundColor: Colors.yellow[200],
+              shape: const RoundedRectangleBorder(
+                borderRadius: BorderRadius.vertical(
+                  bottom: Radius.circular(10),
+                ),
+              ),
+              elevation: 4,
+            )
+          : null,
       body: Column(
         children: [
           Expanded(
             child: SingleChildScrollView(
-              child: Stack(
-                children: [
-                  // The main content of the Scaffold
-                  SizedBox(
-                    height: MediaQuery.of(context).size.height * 1.2,
-                    width: MediaQuery.of(context).size.width,
-                    child: Column(
-                      children: [
-                        // Space for the sticky widget
-                        // Only show the space if the process bar is visible
-                        _showProcessBar
-                            ? const SizedBox(height: 80)
-                            : const SizedBox.shrink(),
-                        PlaygroundWidget(
-                          currentStep: stepNotifier.currentStepIndex,
-                        ),
-                      ],
-                    ),
-                  ),
-
-                  // The sticky widget
-                  // Only show the process bar if _showProcessBar is true
-                  if (_showProcessBar)
-                    Positioned(
-                      top: 0,
-                      left: 0,
-                      right: 0,
-                      child: Container(
-                        padding: const EdgeInsets.all(16),
-                        decoration: BoxDecoration(
-                          color: Colors.yellow[200], // Sticker background color
-                          borderRadius:
-                              BorderRadius.circular(10), // Rounded corners
-                          boxShadow: [
-                            BoxShadow(
-                              color: Colors.grey.withOpacity(0.5),
-                              spreadRadius: 2,
-                              blurRadius: 5,
-                              offset: const Offset(0, 3),
-                            ),
-                          ],
-                        ),
-                        child:
-                            widget.processBar, // The actual processBar widget
-                      ),
-                    ),
-
-                  Align(
-                    alignment: Alignment.bottomCenter,
-                    child: Padding(
-                      padding: const EdgeInsets.all(16.0),
-                      child: ElevatedButton(
-                        onPressed: () {
-                          setState(() {
-                            _showProcessBar = !_showProcessBar;
-                          });
-                        },
-                        child: Text(_showProcessBar
-                            ? 'Hide Process Bar'
-                            : 'Show Process Bar'),
-                      ),
-                    ),
-                  ),
-                ],
+              child: SizedBox(
+                height: MediaQuery.of(context).size.height,
+                child: PlaygroundWidget(
+                  currentStep:
+                      currentStep, // Use the current step from the provider
+                ),
               ),
             ),
           ),
+          Padding(
+            padding: const EdgeInsets.all(8.0),
+            child: Row(
+              mainAxisAlignment: MainAxisAlignment.spaceAround,
+              children: [
+                // Safely constraint the previous button
+                if (currentStep != 0)
+                  MaterialButton(
+                    color: Theme.of(context).colorScheme.secondary,
+                    onPressed: () {
+                      stepNotifier.previousStep();
+                    },
+                    child: const Text('Previous'),
+                  ),
+                // Safely constraint the next button
+                if (currentStep < stepNotifier.stepCount)
+                  MaterialButton(
+                    color: Theme.of(context).colorScheme.secondary,
+                    onPressed: () {
+                      stepNotifier.nextStep();
+                    },
+                    child: const Text('Next'),
+                  ),
+              ],
+            ),
+          ),
         ],
+      ),
+      floatingActionButton: FloatingActionButton(
+        onPressed: () {
+          setState(() {
+            _showProcessBar = !_showProcessBar;
+          });
+        },
+        child: Icon(_showProcessBar ? Icons.visibility_off : Icons.visibility),
       ),
     );
   }

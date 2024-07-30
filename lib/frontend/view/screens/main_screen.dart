@@ -13,13 +13,22 @@ class MainScreen extends StatefulWidget {
 }
 
 class _MainScreenState extends State<MainScreen> {
+  bool _appBarExpanded = true; // State for app bar expansion
+
   @override
   Widget build(BuildContext context) {
     return Scaffold(
-      appBar: const PreferredSize(
-        preferredSize:
-            Size.fromHeight(kToolbarHeight), // Standard AppBar height
-        child: MainScreenAppBar(),
+      appBar: PreferredSize(
+        preferredSize: _appBarExpanded
+            ? const Size.fromHeight(kToolbarHeight)
+            : const Size.fromHeight(0), // Collapsed height
+        child: AnimatedContainer(
+          duration: const Duration(milliseconds: 300), // Animation duration
+          height: _appBarExpanded ? kToolbarHeight : 0, // Animated height
+          child: _appBarExpanded
+              ? const MainScreenAppBar()
+              : const SizedBox.shrink(), // Collapsed content
+        ),
       ),
       body: Column(
         children: [
@@ -44,6 +53,19 @@ class _MainScreenState extends State<MainScreen> {
                   ],
                 ),
               ),
+            ),
+          ),
+          // Button to toggle app bar expansion
+          Padding(
+            padding: const EdgeInsets.all(16.0),
+            child: ElevatedButton(
+              onPressed: () {
+                setState(() {
+                  _appBarExpanded = !_appBarExpanded;
+                });
+              },
+              child:
+                  Text(_appBarExpanded ? 'Collapse AppBar' : 'Expand AppBar'),
             ),
           ),
         ],

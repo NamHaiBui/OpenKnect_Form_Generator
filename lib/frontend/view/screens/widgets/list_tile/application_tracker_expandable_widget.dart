@@ -1,10 +1,11 @@
 import 'dart:math';
 
 import 'package:flutter/material.dart';
+import 'package:flutter_riverpod/flutter_riverpod.dart';
 
 import 'components/status_expandable_list_tile.dart';
 
-class ApplicationStatusTrackerWidget extends StatelessWidget {
+class ApplicationStatusTrackerWidget extends ConsumerWidget {
   final int currentStep;
   final List<String> steps;
   final bool isExample;
@@ -22,7 +23,7 @@ class ApplicationStatusTrackerWidget extends StatelessWidget {
   });
 
   @override
-  Widget build(BuildContext context) {
+  Widget build(BuildContext context, WidgetRef ref) {
     double maxDotSize = 0;
     for (int i = 0; i < steps.length; i++) {
       final textSize = TextPainter(
