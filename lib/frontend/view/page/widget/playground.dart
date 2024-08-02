@@ -1,13 +1,19 @@
+// ignore_for_file: avoid_web_libraries_in_flutter
+
 import 'dart:convert';
+import 'dart:html' as html;
 import 'dart:io';
 
 import 'package:flutter/material.dart';
+import 'package:flutter/foundation.dart';
 import 'package:flutter_form_builder/flutter_form_builder.dart';
+import 'package:intl/intl.dart';
 import 'package:openknect_form_generator/frontend/layout/split_view.dart';
 import 'package:openknect_form_generator/frontend/model/dynamic_form/dynamic_form_model.dart';
 import 'package:openknect_form_generator/frontend/view/screens/widgets/form_creation_part/editing_box.dart';
 import 'package:openknect_form_generator/frontend/view/screens/widgets/form_creation_part/suggestion_modal.dart';
 import 'package:openknect_form_generator/frontend/view/screens/widgets/list_tile/components/dynamic_form_input.dart';
+import 'package:file_picker/file_picker.dart';
 import 'package:path_provider/path_provider.dart';
 
 class PlaygroundWidget extends StatefulWidget {
@@ -19,22 +25,64 @@ class PlaygroundWidget extends StatefulWidget {
 }
 
 class _PlaygroundWidgetState extends State<PlaygroundWidget> {
-  late String _filePath = '';
   DynamicForm? parsedForm;
   late List<String> errorMessages;
   bool update = false;
   String? jsonCode = "";
   final TextEditingController textPromptController = TextEditingController();
-  Future<void> _saveInputToFile(String jsonCode) async {
+  final TextEditingController _fileNameController = TextEditingController();
+  String? _suggestedFileName;
+
+  Future<void> _saveInputToFile(String jsonCode, String fileName) async {
     try {
-      final directory = await getApplicationDocumentsDirectory();
-      _filePath = '${directory.path}/${widget.currentStep}.txt';
-      final file = File(_filePath);
-      await file.writeAsString(jsonCode);
-      if (mounted) {
+      if (kIsWeb) {
+        // Web Handling (same as before)
+        final formattedJson =
+            const JsonEncoder.withIndent('  ').convert(jsonCode);
+        final blob = html.Blob([formattedJson], 'application/json');
+        final url = html.Url.createObjectUrlFromBlob(blob);
+
+        final anchor = html.AnchorElement(href: url)
+          ..setAttribute(
+              'download', fileName) // Use the fileName from the widget
+          ..style.display = 'none';
+
+        html.document.body?.append(anchor);
+        anchor.click();
+
+        html.Url.revokeObjectUrl(url);
+        html.document.body?.children.remove(anchor);
+
         ScaffoldMessenger.of(context).showSnackBar(
-          SnackBar(content: Text('Input saved to: $_filePath')),
+          SnackBar(content: Text('Input saved to: $fileName')),
         );
+      } else {
+        // Other Platforms
+        String? outputFile;
+
+        if (Platform.isWindows) {
+          // Handle Windows (same as before)
+          outputFile = await FilePicker.platform.saveFile(
+            dialogTitle: 'Please select an output file:',
+            fileName: fileName,
+            type: FileType.custom,
+            allowedExtensions: ['json'],
+          );
+        } else {
+          // Handle iOS, Android, macOS, Linux
+          final directory = await getApplicationDocumentsDirectory();
+          outputFile = '${directory.path}/$fileName';
+          final file = File(outputFile);
+          await file.writeAsString(jsonCode);
+        }
+
+        if (outputFile != null) {
+          if (mounted) {
+            ScaffoldMessenger.of(context).showSnackBar(
+              SnackBar(content: Text('Input saved to: $outputFile')),
+            );
+          }
+        }
       }
     } catch (e) {
       if (mounted) {
@@ -43,6 +91,63 @@ class _PlaygroundWidgetState extends State<PlaygroundWidget> {
         );
       }
     }
+  }
+
+  void _showFileNameDialog() {
+    showDialog(
+      context: context,
+      builder: (context) => AlertDialog(
+        title: const Text('Enter File Name'),
+        content: Column(
+          mainAxisSize: MainAxisSize.min,
+          children: [
+            TextField(
+              controller: _fileNameController,
+              decoration: const InputDecoration(
+                labelText: 'File Name',
+              ),
+            ),
+            const SizedBox(height: 16),
+            if (_suggestedFileName != null)
+              Text('Suggestion: $_suggestedFileName'),
+            const SizedBox(height: 16),
+            ElevatedButton(
+              onPressed: () {
+                _suggestFileName(_fileNameController.text.trim());
+              },
+              child: const Text('Suggest File Name'),
+            ),
+          ],
+        ),
+        actions: [
+          TextButton(
+            onPressed: () => Navigator.pop(context),
+            child: const Text('Cancel'),
+          ),
+          TextButton(
+            onPressed: () {
+              _saveInputToFile(
+                jsonCode!,
+                _fileNameController.text.trim(),
+              );
+              Navigator.pop(context);
+            },
+            child: const Text('Save'),
+          ),
+        ],
+      ),
+    );
+  }
+
+  void _suggestFileName(String input) {
+    final now = DateTime.now();
+    final datePart = DateFormat('yyyy-MM-dd').format(now);
+
+    setState(() {
+      // Example template: document_{date}_{input}
+      _suggestedFileName =
+          "document_${datePart}_${input.replaceAll(RegExp(r'[^\w\s-]'), '').replaceAll(' ', '_').toLowerCase()}";
+    });
   }
 
   @override
@@ -87,7 +192,7 @@ class _PlaygroundWidgetState extends State<PlaygroundWidget> {
   Widget attemptParsing(String json) {
     try {
       // Decode the JSON string
-      debugPrint(json);
+      // debugPrint(json);
       var decodedJson = DynamicForm.fromJson(jsonDecode(json));
       setState(
         () {
@@ -184,11 +289,7 @@ class _PlaygroundWidgetState extends State<PlaygroundWidget> {
                 ),
                 MaterialButton(
                   color: Theme.of(context).colorScheme.secondary,
-                  onPressed: () async {
-                    if (jsonCode != null && jsonCode!.isNotEmpty) {
-                      await _saveInputToFile(jsonCode!);
-                    }
-                  },
+                  onPressed: _showFileNameDialog,
                   child: const Text('Save to File'),
                 ),
               ],
