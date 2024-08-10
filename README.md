@@ -1,25 +1,122 @@
-# OpenKnect Form Generator Documentation
+# OpenKnect Form Generator
 
-## Dynamic Form Generation with JSON
+OpenKnect Form Generator is a powerful Flutter package that enables dynamic creation of forms using JSON data and AI-powered form generation. It features real-time form preview and editing capabilities, making it an ideal solution for developers who need to create complex, customizable forms quickly and efficiently.
 
-This project provides a flexible and customizable solution for creating dynamic forms in Flutter applications using JSON. The JSON data defines the structure and behavior of the forms, allowing for easy modification and reusability.
+## Features
+
+- Dynamic form generation from JSON
+- Real-time JSON editing and form preview
+- AI-powered form creation using Gemini API
+- Support for various form field types
+- JSON linting and pretty-printing
+- Integration with Firebase Messaging
+- Country and state data support for address fields
+
+## Installation
+
+Add this to your package's `pubspec.yaml` file:
+
+```yaml
+dependencies:
+  openknect_form_generator: ^1.0.0
+```
+
+Then run:
+
+```bash
+flutter pub get
+```
+
+## Usage
+
+### Initializing the Form Generator
+
+First, initialize the package with your API key:
+
+```dart
+import 'package:openknect_form_generator/package_initialization.dart';
+
+await FormPackageInitialization.initialize(apiKey: 'YOUR_API_KEY');
+```
+
+This initialization process sets up the Gemini API for AI-powered form generation and loads country and state data for address fields.
+
+### Dynamic Live Form Creation
+
+One of the key features of OpenKnect Form Generator is its ability to translate JSON input into a dynamic form in real-time. This is achieved through the combination of the `EditingBox` and `FormCreationWidget` components.
+
+1. **EditingBox**: This widget provides a text area for editing JSON with built-in linting and pretty-printing capabilities. As you type or modify the JSON, it automatically formats and validates the input.
+
+```dart
+EditingBox(
+  textPromptController: _controller,
+  onSaved: (value) {
+    // Handle saved value and trigger form update
+  },
+  showModal: () {
+    // Show modal logic
+  },
+  onError: (error) {
+    // Handle JSON parsing error
+  },
+)
+```
+
+2. **FormCreationWidget**: This widget renders the dynamic form based on the JSON input. It updates in real-time as the JSON in the `EditingBox` changes.
+
+```dart
+FormCreationWidget(
+  processBar: YourProcessBarWidget(),
+)
+```
+
+The `FormCreationWidget` uses the `PlaygroundWidget` internally to render the form fields based on the current JSON input. As you edit the JSON in the `EditingBox`, the `FormCreationWidget` automatically updates to reflect these changes, providing an immediate visual representation of your form.
+
+This real-time translation from JSON to a live, interactive form allows for rapid prototyping and iteration of form designs, significantly speeding up the development process.
+
+### Generating a Form from JSON
+
+Use the `DynamicFormService` to parse JSON and create a `FormBuilder`:
+
+```dart
+import 'package:openknect_form_generator/frontend/service/form_builder_service.dart';
+
+String jsonString = '...'; // Your JSON string
+FormBuilder? formBuilder = await DynamicFormService.parseJson(jsonString);
+
+if (formBuilder != null) {
+  // Use the formBuilder in your widget tree
+}
+```
+
+### AI-Powered Form Generation
+
+Use the `GeminiInitializer` to generate forms using AI:
+
+```dart
+import 'package:openknect_form_generator/gemini_initialization.dart';
+
+String prompt = "Create a form for a job application";
+var response = await GeminiInitializer.call(prompt);
+// Process the response to get the generated form JSON
+```
 
 ## Supported Form Field Types
 
 The following form field types are supported:
 
-- **TextBox:** A simple text input field.
-- **DropdownList:** A dropdown menu for selecting from a list of options.
-- **CheckBox:** A single checkbox for selecting a boolean value.
-- **CheckboxGroup:** A group of checkboxes for selecting multiple options.
-- **RadioGroup:** A group of radio buttons for selecting a single option.
-- **Date:** A date picker for selecting a single date.
-- **DateRange:** A date range picker for selecting a range of dates.
-- **NumRange:** A numeric range picker for selecting a range of numbers.
-- **Address:** A specialized field for entering an address with country, state, city, postal code, and street information.
-- **ToCollectCheckboxGroup:** A group of checkboxes for selecting multiple options, where each option represents a value to be collected.
+- TextBox
+- DropdownList
+- CheckBox
+- CheckboxGroup
+- RadioGroup
+- Date
+- DateRange
+- NumRange
+- Address
+- ToCollectCheckboxGroup
 
-## Example JSON Structure
+## JSON Structure for Form Fields
 
 Here are examples of how to define each form field type in JSON, including validation requirements:
 
@@ -28,15 +125,15 @@ Here are examples of how to define each form field type in JSON, including valid
 ```json
 {
   "type": "textBox",
-  "label": "Text Input", // Label displayed for the field
-  "initialValue": ["Initial Text"], // Default value for the field
-  "key": "textInput", // Unique identifier for the field
-  "text": "Enter text here", // Placeholder text for the field
-  "options": [], // Not applicable for TextBox
+  "label": "Text Input",
+  "initialValue": ["Initial Text"],
+  "key": "textInput",
+  "text": "Enter text here",
+  "options": [],
   "validations": {
-    "required": true, // Validation rule: field is required
-    "minLength": 5, // Validation rule: minimum length of the input
-    "maxLength": 20 // Validation rule: maximum length of the input
+    "required": true,
+    "minLength": 5,
+    "maxLength": 20
   }
 }
 ```
@@ -46,20 +143,18 @@ Here are examples of how to define each form field type in JSON, including valid
 ```json
 {
   "type": "dropdownList",
-  "label": "Dropdown List", // Label displayed for the field
-  "initialValue": ["Option 2"], // Default selected option
-  "key": "dropdownList", // Unique identifier for the field
+  "label": "Dropdown List",
+  "initialValue": ["Option 2"],
+  "key": "dropdownList",
   "options": [
-    "Option 1", // List of all available options
+    "Option 1",
     "Option 2",
     "Option 3"
   ],
   "validations": {
-    "required": true // Validation rule: field is required
+    "required": true
   }
 }
-
-
 ```
 
 ### CheckBox
@@ -67,16 +162,14 @@ Here are examples of how to define each form field type in JSON, including valid
 ```json
 {
   "type": "checkBox",
-  "label": "Checkbox", // Label displayed for the field
-  "initialValue": ["true"], // Default value for the field (true for checked)
-  "key": "checkbox", // Unique identifier for the field
-  "options": ["Option1"], // Not applicable for CheckBox
+  "label": "Checkbox",
+  "initialValue": ["true"],
+  "key": "checkbox",
+  "options": ["Option1"],
   "validations": {
-    "required": true // Validation rule: field is required
+    "required": true
   }
 }
-
-
 ```
 
 ### CheckboxGroup
@@ -84,19 +177,18 @@ Here are examples of how to define each form field type in JSON, including valid
 ```json
 {
   "type": "checkboxGroup",
-  "label": "Checkbox Group", // Label displayed for the field
-  "initialValue": ["Option 1", "Option 3"], // List of default selected options
-  "key": "checkboxGroup", // Unique identifier for the field
+  "label": "Checkbox Group",
+  "initialValue": ["Option 1", "Option 3"],
+  "key": "checkboxGroup",
   "options": [
-    "Option 1", // List of all available options
+    "Option 1",
     "Option 2",
     "Option 3"
   ],
   "validations": {
-    "required": true // Validation rule: field is required
+    "required": true
   }
 }
-
 ```
 
 ### RadioGroup
@@ -104,19 +196,18 @@ Here are examples of how to define each form field type in JSON, including valid
 ```json
 {
   "type": "radioGroup",
-  "label": "Radio Group", // Label displayed for the field
-  "initialValue": ["Option 2"], // Default selected option
-  "key": "radioGroup", // Unique identifier for the field
+  "label": "Radio Group",
+  "initialValue": ["Option 2"],
+  "key": "radioGroup",
   "options": [
-    "Option 1", // List of all available options
+    "Option 1",
     "Option 2",
     "Option 3"
   ],
   "validations": {
-    "required": true // Validation rule: field is required
+    "required": true
   }
 }
-
 ```
 
 ### Date
@@ -124,20 +215,19 @@ Here are examples of how to define each form field type in JSON, including valid
 ```json
 {
   "type": "date",
-  "label": "Birth Date", // Label displayed for the field
-  "name": "birthDate", // Unique identifier for the field
-  "key": "date", // Unique identifier for the field
+  "label": "Birth Date",
+  "name": "birthDate",
+  "key": "date",
   "date": {
-    "dateFormat": "yyyy-MM-dd", // Format of the date
-    "firstDate": "2023-12-31", // First selectable date
-    "lastDate": "2023-12-31" // Last selectable date
+    "dateFormat": "yyyy-MM-dd",
+    "firstDate": "2023-12-31",
+    "lastDate": "2023-12-31"
   },
-  "initialValue": ["2023-12-25"], // Default selected date
+  "initialValue": ["2023-12-25"],
   "validations": {
-    "required": true // Validation rule: field is required
+    "required": true
   }
 }
-
 ```
 
 ### DateRange
@@ -145,20 +235,19 @@ Here are examples of how to define each form field type in JSON, including valid
 ```json
 {
   "type": "dateRange",
-  "label": "Date Range", // Label displayed for the field
+  "label": "Date Range",
   "date": {
-    "dateFormat": "yyyy-MM-dd", // Format of the date
-    "firstDate": "2000-01-01", // First selectable date
-    "lastDate": "2023-12-31" // Last selectable date
+    "dateFormat": "yyyy-MM-dd",
+    "firstDate": "2000-01-01",
+    "lastDate": "2023-12-31"
   },
-  "initialValue": ["2023-12-25", "2023-12-26"], // Default selected date range
-  "key": "dateRange", // Unique identifier for the field
-  "options": [], // Not applicable for DateRange
+  "initialValue": ["2023-12-25", "2023-12-26"],
+  "key": "dateRange",
+  "options": [],
   "validations": {
-    "required": true // Validation rule: field is required
+    "required": true
   }
 }
-
 ```
 
 ### NumRange
@@ -166,54 +255,51 @@ Here are examples of how to define each form field type in JSON, including valid
 ```json
 {
   "type": "numRange",
-  "label": "Number Range", // Label displayed for the field
-  "initialValue": ["10", "50"], // Default selected number range
-  "key": "numRange", // Unique identifier for the field
-  "options": [], // Not applicable for NumRange
+  "label": "Number Range",
+  "initialValue": ["10", "50"],
+  "key": "numRange",
+  "options": [],
   "validations": {
-    "required": true // Validation rule: field is required
+    "required": true
   }
 }
-
 ```
 
 ### Address
 
-- Initial Value for Address currently not working due to varies in State and Country listing
-
 ```json
 {
   "type": "address",
-  "label": "Address", // Label displayed for the field
-  "initialValue": ["123 Main St", "Carli", "Anytown", "CA", "12345"], // Default address components
-  "key": "address", // Unique identifier for the field
-  "options": [], // Not applicable for Address
+  "label": "Address",
+  "initialValue": ["123 Main St", "Carli", "Anytown", "CA", "12345"],
+  "key": "address",
+  "options": [],
   "validations": {
-    "required": true // Validation rule: field is required
+    "required": true
   }
 }
-
 ```
+
+Note: Initial Value for Address currently not working due to variations in State and Country listing.
 
 ### ToCollectCheckboxGroup
 
 ```json
 {
   "type": "toCollectCheckboxGroup",
-  "label": "To Collect Checkbox Group", // Label displayed for the field
-  "text": "Fun", // Text displayed next to the checkbox group
-  "initialValue": ["Option 2", "Option 3"], // List of default selected options
-  "key": "toCollectCheckboxGroup", // Unique identifier for the field
+  "label": "To Collect Checkbox Group",
+  "text": "Fun",
+  "initialValue": ["Option 2", "Option 3"],
+  "key": "toCollectCheckboxGroup",
   "options": [
-    "Option 1", // List of all available options
+    "Option 1",
     "Option 2",
     "Option 3"
   ],
   "validations": {
-    "required": true // Validation rule: field is required
+    "required": true
   }
 }
-
 ```
 
 ### Initial Value Handling
@@ -221,97 +307,113 @@ Here are examples of how to define each form field type in JSON, including valid
 - **Single Initial Value:** For fields with a single initial value, the program will use `initialValue[0]`.
 - **Multiple Initial Values:** For fields with multiple initial values, the program will read from `initialValue[0]` and beyond.
 
-## Usage
+## Key Components
 
-1. **Define Form Fields in JSON:** Create a JSON file containing the form field definitions.
-2. **Load JSON Data:** Load the JSON data into your Flutter application.
-3. **Dynamically Create Form Widgets:** Use the JSON data to dynamically create form widgets based on the field types.
-4. **Handle Form Submission:** Process the form data when the user submits the form.
+### DynamicFormInput
 
-## Example Implementation
+The `DynamicFormInput` widget is the core component for rendering various form field types based on the parsed JSON data.
 
 ```dart
-// Load JSON data from a file or API
-List<Map<String, dynamic>> formFields = ...;
-
-// Create a dynamic form using the JSON data
-Form(
-  child: Column(
-    children: formFields.map((field) {
-      // Create a form field widget based on the field type
-      switch (field.type) {
-        case 'textBox':
-          return TextFieldWidget(field: field);
-        case 'dropdownList':
-          return DropdownListWidget(field: field);
-        case 'checkBox':
-          return CheckboxFieldWidget(field: field);
-        // ... other field types
-        default:
-          return Container();
-      }
-    }).toList(),
-  ),
-);
+DynamicFormInput(
+  field: field,
+  onSaved: (value) {},
+  onSubmit: (value) {},
+)
 ```
 
-### Future Augmentation: Gemini API Integration
+### StatusExpandableListTile
 
-This section outlines a future enhancement to dynamically generate form JSON using the Gemini API.
+This widget creates an expandable list tile that shows the current status of a multi-step form process.
 
-#### Concept
-
-The application will send a request to the Gemini API, providing a description of the desired form.
-Gemini will process the request and generate a JSON file containing the form structure and field definitions.
-The application will then load and parse this JSON file to dynamically create the form.
-
-```json
-{
-  "formName": "My Form", // Name of the form
-  "fields": [
-    {
-      "type": "textBox",
-      "label": "Name",
-      "initialValue": ["John Doe"],
-      "key": "name",
-      "validations": {
-        "required": true,
-        "minLength": 3,
-        "maxLength": 20,
-        "numeric":false,
-        "email":false
-      }
-    },
-    {
-      "type": "dropdownList",
-      "label": "Country",
-      "initialValue": ["US"],
-      "key": "country",
-      "options": [
-        "US",
-        "UK",
-        "Canada",
-        "Australia"
-      ],
-      "validations": {
-        "required": true
-      }
-    },
-    {
-      "type": "date",
-      "label": "Birth Date",
-      "name": "birthDate",
-      "key":"date",
-      "date": {
-        "dateFormat": "yyyy-MM-dd",
-        "firstDate": "2023-12-31",
-        "lastDate": "2023-12-31"
-      },
-      "initialValue": ["2023-12-25"],
-      "validations": {
-        "required": true
-      }
-    }
-  ]
-}
+```dart
+StatusExpandableListTile(
+  steps: steps,
+  currentStep: currentStep,
+  maxDotSize: maxDotSize,
+  isInConsideration: true,
+  isExample: false,
+)
 ```
+
+### ApplicationStatusTrackerWidget
+
+A higher-level widget that wraps the `StatusExpandableListTile` and provides a visual representation of the application process steps.
+
+```dart
+ApplicationStatusTrackerWidget(
+  currentStep: currentStep,
+  steps: ['Applied', 'Screen', 'Interview', 'Offer'],
+  isExample: false,
+)
+```
+
+## Admin and Recipient Screens
+
+### Admin Screen
+
+The `AdminScreen` allows form creators to:
+
+1. Choose between creating a single dynamic form or a series of forms
+2. Set the number of steps for a form series
+3. Define step names
+4. Generate and preview the form(s)
+
+### Recipient Screen
+
+The `RecipientScreen` allows users to:
+
+1. Load JSON data from a URL or local file
+2. Parse the JSON into a dynamic form
+3. Display and interact with the generated form
+
+## JSON Parsing
+
+The library uses the `DynamicForm` model to parse JSON data into form fields:
+
+```dart
+var decodedJson = DynamicForm.fromJson(jsonDecode(jsonString));
+```
+
+## Form Building
+
+Forms are built using the `FormBuilder` widget from the `flutter_form_builder` package, with `DynamicFormInput` widgets generated for each field in the parsed JSON.
+
+## Error Handling
+
+The library includes error handling for JSON parsing and loading issues, displaying appropriate error messages to the user.
+
+## Customization
+
+Developers can extend the library by adding new field types to the `DynamicFormInput` widget and corresponding field widgets for rendering.
+
+## Dependencies
+
+- flutter_form_builder: For building dynamic forms
+- form_builder_validators: For form field validation
+- country_state_city: For country and state data in address fields
+- google_generative_ai: For AI-powered form generation using Gemini API
+
+## Contributing
+
+Contributions are welcome! Please feel free to submit a Pull Request.
+
+## Future Expansion
+
+1. Loading in a series of forms and processing series of forms.
+2. Support for other LLMs besides Gemini.
+3. Better UI/UX for form creation and management.
+4. Enhanced validation options for form fields.
+5. Integration with more backend services and databases.
+6. Implement Gemini API integration for dynamic form JSON generation based on natural language descriptions.
+
+## License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## Support
+
+For detailed information on JSON structure and field types, refer to the [full documentation](link-to-full-docs).
+
+If you encounter any issues or have questions, please file an issue on the GitHub repository.
+
+Author: Nam Bui.
